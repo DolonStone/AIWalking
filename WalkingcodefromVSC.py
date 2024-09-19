@@ -145,7 +145,7 @@ black = (0, 0, 0)
 
 
 pygame.init()
-normaltype = "yes"#input("Would you like to use factory settings?")
+normaltype = input("Would you like to use factory settings?")
 if normaltype == "Yes" or normaltype == "yes":
   iterationtime = 2
   numberofprosthetics = 2#random.randint(2,4)
@@ -163,7 +163,7 @@ else:
   population = int(input("please enter the number of people in a population (a large population means a higher likelyhood to find a good one):"))
   while population < 1:
     population = int(input("Please enter a number greater than 0, the simulation requires at least 1 person, and 7 or more is prefered"))
-  humanleg = input("would you like to have a human leg included?")
+  #humanleg = input("would you like to have a human leg included?")
   if humanleg == "yes" or humanleg == "y" or humanleg == "True":
     humanleg = True
 start = True
@@ -280,7 +280,7 @@ while True:
       farthest[1] = distance
     else:
       pass
-  print(farthest)
+  #print(farthest)
   
   numiterations += 1
   if((numiterations % 10 == 0) & (iterationtime<14)):
