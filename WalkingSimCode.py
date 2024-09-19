@@ -72,17 +72,17 @@ class leg:
 
 class person:
   def __init__(self,leglength,lowerleglength,numberoflegs,layer,humanleg):
-    self.chest, self.chestb = moving_rectangle(space, 130, 165, 40,40,70,80,80,100,layer)
+    self.chest, self.chestb = moving_rectangle(space, 130, floorheight-235, 40,40,70,80,80,100,layer)
     self.legs = []
     if humanleg == True:
-      self.humanleg = leg(leglength,lowerleglength,100,200,layer,self.chestb)
+      self.humanleg = leg(leglength,lowerleglength,100,500,layer,self.chestb)
     self.brain = neuralnetwork(32,8,numberoflegs*2,numberoflegs*2)
     self.brain.createnetwork()
     self.switch1 = 1
   
     self.switch2 = 0
     for i in range(numberoflegs):
-      self.legs.append(leg(leglength,lowerleglength, 100,200,layer,self.chestb))
+      self.legs.append(leg(leglength,lowerleglength, 100,floorheight-200,layer,self.chestb))
 
   
   def ChangeSpeed(self,leg,speed,upper):
@@ -145,7 +145,7 @@ black = (0, 0, 0)
 
 
 pygame.init()
-normaltype = input("Would you like to use factory settings?")
+normaltype = "yes"#input("Would you like to use factory settings?")
 if normaltype == "Yes" or normaltype == "yes":
   iterationtime = 2
   numberofprosthetics = 2#random.randint(2,4)
@@ -169,16 +169,19 @@ else:
 start = True
 
 while True:
-
-  display = pygame.display.set_mode((1500, 500))
+  floorheight = 800#original = 400
+  screenwidth = floorheight*(16/9)
+  display = pygame.display.set_mode((screenwidth, floorheight))
   clock = pygame.time.Clock()
   space = pymunk.Space()
   space.gravity = (0, 981)
   draw_options = pymunk.pygame_util.DrawOptions(display)
   farthest = [0,-1000]
-  floor_object(space, 800, 400, 1600, 20) #the floor
-  floor_object(space, 0, 200, 20, 400) #the left wall
-  floor_object(space, 1600, 400, 20, 800) #right wall
+
+  floor_object(space, screenwidth/2, floorheight, 1920, 20) #the floor
+  floor_object(space, 0, floorheight-200, 20, 1500) #the left wall
+  #floor_object(space, 400, floorheight-300, 20, 20)
+  floor_object(space, screenwidth, floorheight, 20, 800) #right wall
   #floor_object(space, 500, 400, 20, 100)
   FPS = 5000
   display.fill((217, 217, 217))
@@ -200,7 +203,7 @@ while True:
   font = pygame.font.Font("freesansbold.ttf", 32)
   text = font.render("iteration number "+textnumber, True, black, grey)
   textRect = text.get_rect()
-  textRect.center = (150, 450)
+  textRect.center = (200, floorheight-200)
   
   currenttime = 0
   while currenttime<iterationtime:
@@ -228,8 +231,8 @@ while True:
         
         for j in range(numberofprosthetics):
           xcoord1,ycoord1,xcoord2,ycoord2 = peopledictionary[i].GetCoords(j)
-          list2.append(-(ycoord1-370))
-          list2.append(-(ycoord2-370))
+          list2.append(-(ycoord1-floorheight+30))
+          list2.append(-(ycoord2-floorheight+30))
           #list2.append(xcoord1)
           #list2.append(xcoord2)
         
@@ -271,7 +274,7 @@ while True:
       x3,y3 = peopledictionary[i].chest.body.position
       distances.append(x)
       distances.append(x1)
-      heights.append((-y3)+390)
+      heights.append((-y3)+floorheight-10)
       
     #print(((sum(distances,0)/numberofprosthetics)/8) , (sum(heights,0)))
     distance = ((sum(distances,0)/numberofprosthetics)/4) + (sum(heights,0))
@@ -286,8 +289,12 @@ while True:
   if((numiterations % 10 == 0) & (iterationtime<14)):
       iterationtime += 2
   #newpopulation = evolution(population,peopledictionary[farthest[0]].brain)
-  if(farthest[1] > 250): 
+  if(farthest[1] > 250 and numiterations<=15):         
       newpopulation = evolution(population,peopledictionary[farthest[0]].brain)
   else:
-      start = True
+      if(farthest[1] > 400):
+          newpopulation = evolution(population,peopledictionary[farthest[0]].brain)
+      else:
+          start = True
+          numiterations = 0
   
